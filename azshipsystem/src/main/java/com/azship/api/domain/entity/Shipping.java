@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name ="shippings" )
@@ -37,4 +38,6 @@ public class Shipping implements Serializable {
     private Double totalVolume;
 
     private Integer totalPacks;
+
+    private LocalDate deliveryDate;
 }

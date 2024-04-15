@@ -1,4 +1,6 @@
 package com.azship.api.domain.resource.request;
 
-public record ShippingRegisterRequest() {
+import java.util.HashMap;
+
+public record ShippingRegisterRequest(Long userID, HashMap<String, String> shippingProperties) {
 }
