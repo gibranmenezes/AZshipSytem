@@ -1,5 +1,6 @@
 package com.azship.api.domain.shipping;
 
+import com.azship.api.domain.shipping.resource.request.ShippingRequest;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,6 +23,13 @@ public class Shipping {
     private ShippingType type;
     private LocalDate deliveryDate;
     private Integer packAmount;
+
+    public Shipping(ShippingRequest data){
+        this.type = data.type();
+        this.deliveryDate = data.deliveryDate();
+        this.volume = data.volume();
+        this.weight = data.weight();
+    }
 
 
 }
