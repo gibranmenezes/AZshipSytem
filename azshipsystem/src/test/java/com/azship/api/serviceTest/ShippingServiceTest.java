@@ -69,7 +69,6 @@ public class ShippingServiceTest {
 
         Shipping savedShipping = shippingService.registerShipping(request);
 
-
         Assertions.assertNotNull(savedShipping);
         Assertions.assertTrue(savedShipping.getId() > 0);
         Assertions.assertEquals(expectedShipping.getUser(), savedShipping.getUser());
