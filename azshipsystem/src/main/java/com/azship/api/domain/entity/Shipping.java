@@ -40,4 +40,5 @@ public class Shipping implements Serializable {
     private Integer totalPacks;
 
     private LocalDate deliveryDate;
+
 }

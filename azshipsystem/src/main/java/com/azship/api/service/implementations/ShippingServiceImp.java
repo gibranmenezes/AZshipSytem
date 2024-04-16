@@ -23,7 +23,7 @@ public class ShippingServiceImp implements ShippingService {
     @Override
     public Shipping registerShipping(ShippingRegisterRequest data) {
         var shipping = new Shipping();
-        var user = userServiceImp.getUserById(data.userID());
+        var user = userServiceImp.getUserById(data.userId());
         shipping.setUser(user);
         shipping.setHashCode(this.generateHashCode());
         this.setProperties(shipping, data);
@@ -45,23 +45,23 @@ public class ShippingServiceImp implements ShippingService {
     public void deleteShipping(Long id) {
 
     }
-    private String generateHashCode() {
+    public String generateHashCode() {
         return UUID.randomUUID().toString();
     }
 
-    private void setProperties(Shipping shipping, ShippingRegisterRequest data){
+    public void setProperties(Shipping shipping, ShippingRegisterRequest data){
         List<Field> fields = List.of(Shipping.class.getDeclaredFields());
         data.shippingProperties().forEach((fieldName, value) -> {
-            if(this.containField(fieldName, fields) && !value.isEmpty()){
+            if(this.containsField(fieldName, fields) && !value.isEmpty()){
                 this.setFieldValue(shipping, fieldName, value);
             }
         });
     }
-    private Boolean containField(String fieldName, List<Field> fields) {
+    public Boolean containsField(String fieldName, List<Field> fields) {
         return fields.stream().anyMatch(field -> field.getName().equals(fieldName));
     }
 
-    private void setFieldValue(Shipping shipping, String fieldName, String value) {
+    public void setFieldValue(Shipping shipping, String fieldName, String value) {
         try {
             Field field = Shipping.class.getDeclaredField(fieldName);
             field.setAccessible(true);
@@ -72,6 +72,7 @@ public class ShippingServiceImp implements ShippingService {
                 case "totalPacks" -> shipping.setTotalPacks(Integer.parseInt(value));
                 case "type" -> {
                     ShippingType type = ShippingType.valueOf(value.toUpperCase());
+                    shipping.setType(type);
                 }
                 case "deliveryDate" -> {
                     var deliveryDate = LocalDate.parse(value);
