@@ -31,4 +31,7 @@ public class User implements Serializable {
         this.shippings = shippings;
     }
 
+    public void addShipping(Shipping shipping) {
+        this.shippings.add(shipping);
+    }
 }

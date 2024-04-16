@@ -14,11 +14,13 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     @Override
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow();
+       return userRepository.findById(id).orElseThrow();
     }
 
     @Override
     public User updateUser(UserUptadeRequest data) {
         return null;
     }
+
+
 }

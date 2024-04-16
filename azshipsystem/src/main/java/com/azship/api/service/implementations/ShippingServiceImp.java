@@ -1,18 +1,25 @@
 package com.azship.api.service.implementations;
 
 import com.azship.api.domain.entity.Shipping;
+import com.azship.api.domain.entity.User;
 import com.azship.api.domain.enums.ShippingType;
 import com.azship.api.domain.resource.request.ShippingRegisterRequest;
 import com.azship.api.domain.resource.request.ShippingUpdateRequest;
+import com.azship.api.domain.resource.response.ShippingListingResponse;
 import com.azship.api.infra.repository.ShippingRepository;
 import com.azship.api.service.ShippingService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,20 +27,22 @@ public class ShippingServiceImp implements ShippingService {
 
     private final UserServiceImp userServiceImp;
     private final ShippingRepository shippingRepository;
+    private static final  List<Field> fields = List.of(Shipping.class.getDeclaredFields());
     @Override
-    public Shipping registerShipping(ShippingRegisterRequest data) {
-        var shipping = new Shipping();
-        var user = userServiceImp.getUserById(data.userId());
+    public Shipping registerShipping(Long userId, ShippingRegisterRequest data) {
+        var shipping = new Shipping(data);
+        var user = userServiceImp.getUserById(userId);
         shipping.setUser(user);
         shipping.setHashCode(this.generateHashCode());
-        this.setProperties(shipping, data);
-
+        user.addShipping(shipping);
         return shippingRepository.save(shipping);
     }
 
     @Override
-    public List<Shipping> getAllByUserId(Long userId) {
-        return null;
+    public Page<ShippingListingResponse> findAllByUserId(Long userId, Pageable pagination){
+        var shippingPage = shippingRepository.findAllByUserId(pagination, userId);
+        return shippingPage.map(ShippingListingResponse::new);
+
     }
 
     @Override
@@ -45,50 +54,13 @@ public class ShippingServiceImp implements ShippingService {
     public void deleteShipping(Long id) {
 
     }
-    public String generateHashCode() {
+    private String generateHashCode() {
         return UUID.randomUUID().toString();
     }
 
-    public void setProperties(Shipping shipping, ShippingRegisterRequest data){
-        List<Field> fields = List.of(Shipping.class.getDeclaredFields());
-        data.shippingProperties().forEach((fieldName, value) -> {
-            if(this.containsField(fieldName, fields) && !value.isEmpty()){
-                this.setFieldValue(shipping, fieldName, value);
-            }
-        });
-    }
-    public Boolean containsField(String fieldName, List<Field> fields) {
-        return fields.stream().anyMatch(field -> field.getName().equals(fieldName));
-    }
 
-    public void setFieldValue(Shipping shipping, String fieldName, String value) {
-        try {
-            Field field = Shipping.class.getDeclaredField(fieldName);
-            field.setAccessible(true);
 
-            switch(fieldName){
-                case "totalWeight" -> shipping.setTotalWeight(Double.parseDouble(value));
-                case "totalVolume" -> shipping.setTotalVolume(Double.parseDouble(value));
-                case "totalPacks" -> shipping.setTotalPacks(Integer.parseInt(value));
-                case "type" -> {
-                    ShippingType type = ShippingType.valueOf(value.toUpperCase());
-                    shipping.setType(type);
-                }
-                case "deliveryDate" -> {
-                    var deliveryDate = LocalDate.parse(value);
-                    shipping.setDeliveryDate(deliveryDate);
-                }
-                default -> field.set(shipping, value);
-            }
 
-        } catch (NoSuchFieldException e) {
-            System.err.println("Erro: Campo '" + fieldName + "' não encontrado em Shipping.");
-        } catch (IllegalAccessException e) {
-            System.err.println("Erro: Acesso ilegal ao campo '" + fieldName + "' em Shipping.");
-        } catch (IllegalArgumentException e) {
-            System.err.println("Erro: Valor inválido para o campo '" + fieldName + "' em Shipping.");
-        }
-    }
 
 
 }

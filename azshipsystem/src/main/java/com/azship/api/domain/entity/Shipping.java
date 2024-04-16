@@ -1,6 +1,8 @@
 package com.azship.api.domain.entity;
 
 import com.azship.api.domain.enums.ShippingType;
+import com.azship.api.domain.resource.request.ShippingRegisterRequest;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class Shipping implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = true)
+    @JsonBackReference
     private User user;
 
     private String postalCode;
@@ -40,5 +43,14 @@ public class Shipping implements Serializable {
     private Integer totalPacks;
 
     private LocalDate deliveryDate;
+
+    public Shipping(ShippingRegisterRequest data){
+        this.postalCode = data.postalCode();
+        this.totalVolume = data.totalVolume();
+        this.totalWeight = data.totalWeight();
+        this.totalPacks = data.totalPacks();
+        this.type = data.type();
+        this.deliveryDate = data.deliveryDate();
+    }
 
 }
