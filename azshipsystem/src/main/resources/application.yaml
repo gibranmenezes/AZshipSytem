@@ -1,9 +1,8 @@
 spring:
-  application:
-    name: azshipsystem
   data:
     mongodb:
       host: localhost
       port: 27017
       database: azship
-
+      username: root
+      password: example
