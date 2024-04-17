@@ -15,7 +15,7 @@ public class FieldsNullValidation implements CreateShippingValidator {
     }
     private boolean allFieldsAreNullOrBlank(ShippingRequest request) {
 
-        return request.type() == null
+        return request.postalCode() == null
                 && request.deliveryDate() == null
                 && request.packAmount() == null
                 && request.weight() == null

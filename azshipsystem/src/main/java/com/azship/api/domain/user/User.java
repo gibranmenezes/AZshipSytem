@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -13,17 +14,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(collation = "users")
+@Document(collection = "users")
 public class User {
 
     @Id
     private String id;
 
     @DBRef
-    private List<Shipping> shippings;
+    private List<Shipping> shippings = new ArrayList<>();
 
     public void addShipping(Shipping shipping) {
         shippings.add(shipping);
     }
+
 
 }
