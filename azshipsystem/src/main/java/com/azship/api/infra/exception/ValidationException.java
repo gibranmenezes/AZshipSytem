@@ -1,4 +1,4 @@
-package com.azship.api.infra.repository.exception;
+package com.azship.api.infra.exception;
 
 public class ValidationException extends RuntimeException{
     public ValidationException(String message){

@@ -1,7 +1,9 @@
 package com.azship.api.controller;
 
 import com.azship.api.domain.shipping.resource.request.ShippingRequest;
+import com.azship.api.domain.shipping.resource.request.StatusUpdatingRequest;
 import com.azship.api.domain.shipping.resource.response.ShippingResponse;
+import com.azship.api.domain.shipping.resource.response.StatusUpdateResponse;
 import com.azship.api.service.imp.ShippingServiceImp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +29,10 @@ public class ShippingController {
     public ResponseEntity<Page<ShippingResponse>> getAll(@PathVariable String userId
             , @PageableDefault(size = 10, sort = {"id"}) Pageable pagination) {
         return ResponseEntity.ok(serviceImp.getAllByUserId(userId, pagination));
+    }
+    @PutMapping()
+    public ResponseEntity<StatusUpdateResponse> updateStatus(StatusUpdatingRequest request){
+        return ResponseEntity.ok(serviceImp.updateStatus(request));
     }
 
 }

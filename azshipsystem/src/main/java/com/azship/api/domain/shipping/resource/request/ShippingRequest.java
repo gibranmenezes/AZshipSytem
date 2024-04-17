@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record ShippingRequest(@NotNull String userID, LocalDate deliveryDate, String postalCode,
+public record ShippingRequest(@NotNull String userID, String postalCode,
                               Double weight, Double volume, Integer packAmount,  @NotNull ShippingType type) {
 }

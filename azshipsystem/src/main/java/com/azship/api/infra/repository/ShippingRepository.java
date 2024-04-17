@@ -10,4 +10,6 @@ import java.util.List;
 public interface ShippingRepository extends MongoRepository<Shipping, String> {
 
     Page<Shipping> findAllByUserId(String userId, Pageable pagination);
+
+    Shipping findShippingById(String id);
 }

@@ -1,13 +1,13 @@
-package com.azship.api.domain.validations.shipping;
+package com.azship.api.domain.validations.shipping.registration;
 
 import com.azship.api.domain.shipping.resource.request.ShippingRequest;
-import jakarta.xml.bind.ValidationException;
+import com.azship.api.infra.exception.ValidationException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FieldsNullValidation implements CreateShippingValidator {
     @Override
-    public void validate(ShippingRequest data) throws ValidationException {
+    public void validate(ShippingRequest data)  {
         if(this.allFieldsAreNullOrBlank(data)) {
             throw new ValidationException(("A least one field is required"));
         }
@@ -16,7 +16,6 @@ public class FieldsNullValidation implements CreateShippingValidator {
     private boolean allFieldsAreNullOrBlank(ShippingRequest request) {
 
         return request.postalCode() == null
-                && request.deliveryDate() == null
                 && request.packAmount() == null
                 && request.weight() == null
                 && request.volume() == null;
