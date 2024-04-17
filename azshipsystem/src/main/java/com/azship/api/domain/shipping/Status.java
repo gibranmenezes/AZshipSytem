@@ -7,7 +7,6 @@ public enum Status {
     PREPARING("preparing"),
     READY("ready"),
     SENT("sent"),
-    RETURNED("returned"),
     DELIVERED("delivered");
 
     private final String value;
@@ -16,17 +15,8 @@ public enum Status {
         this.value = value;
     }
 
-    public String getstatus() {
+    public String getStatus() {
         return value;
-    }
-
-    public static Status fromString(String value) {
-        for (Status status : Status.values()) {
-            if (status.name().equalsIgnoreCase(value)) {
-                return status;
-            }
-        }
-        throw new IllegalArgumentException("No constant with text " + value + " found");
     }
 
 }

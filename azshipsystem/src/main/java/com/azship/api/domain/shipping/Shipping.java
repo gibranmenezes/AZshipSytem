@@ -32,7 +32,7 @@ public class Shipping {
     private Integer packAmount;
 
     public Shipping(ShippingRequest data){
-        this.status = Status.valueOf("preparing");
+        this.status = Status.PREPARING;
         this.type = data.type();
         this.postalCode = data.postalCode();
         this.volume = data.volume();

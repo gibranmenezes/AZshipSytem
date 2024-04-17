@@ -28,7 +28,8 @@ public class ShippingServiceImp implements ShippingService {
     private final ShippingRepository shippingRepository;
     private final UserRepository userRepository;
     private final List<CreateShippingValidator> createValidators;
-    private final List<UpdatingShippingValidator> updateValidators;
+    private final List<UpdatingShippingValidator> updatingValidators;
+
 
     @Override
     @Transactional
@@ -60,6 +61,9 @@ public class ShippingServiceImp implements ShippingService {
                 .orElseThrow(() -> new ValidationException("User not found"));
 
         var newStatus = request.status();
+
+        updatingValidators.forEach(v -> v.validate(request));
+
         shipping.setStatus(newStatus);
 
         if ((newStatus.equals(Status.SENT))){
