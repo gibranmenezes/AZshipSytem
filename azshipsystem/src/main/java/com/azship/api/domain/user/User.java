@@ -22,4 +22,8 @@ public class User {
     @DBRef
     private List<Shipping> shippings;
 
+    public void addShipping(Shipping shipping) {
+        shippings.add(shipping);
+    }
+
 }
