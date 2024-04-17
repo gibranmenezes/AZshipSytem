@@ -3,7 +3,9 @@ package com.azship.api.service.imp;
 import com.azship.api.domain.shipping.Shipping;
 import com.azship.api.domain.shipping.Status;
 import com.azship.api.domain.shipping.resource.request.ShippingRequest;
+import com.azship.api.domain.shipping.resource.request.ShippingUpdateRequest;
 import com.azship.api.domain.shipping.resource.request.StatusUpdatingRequest;
+import com.azship.api.domain.shipping.resource.response.ShippingUpdateResponse;
 import com.azship.api.domain.shipping.resource.response.StatusUpdateResponse;
 import com.azship.api.domain.shipping.resource.response.ShippingResponse;
 import com.azship.api.domain.validations.shipping.registration.CreateShippingValidator;
@@ -50,15 +52,22 @@ public class ShippingServiceImp implements ShippingService {
     }
 
     @Override
+    public ShippingResponse getShipping(String id){
+        var shipping = this.returnShippingIfExists(id);
+        return new ShippingResponse(shipping);
+    }
+
+    @Override
     public Page<ShippingResponse> getAllByUserId(String userId, Pageable pagination) {
         var page = shippingRepository.findAllByUserId(userId,pagination);
         return page.map(ShippingResponse::new);
 
     }
 
+    @Override
+    @Transactional
     public StatusUpdateResponse updateStatus(StatusUpdatingRequest request){
-        var shipping = shippingRepository.findById(request.id())
-                .orElseThrow(() -> new ValidationException("User not found"));
+        var shipping = this.returnShippingIfExists(request.id());
 
         var newStatus = request.status();
 
@@ -77,9 +86,35 @@ public class ShippingServiceImp implements ShippingService {
         return  new StatusUpdateResponse(shipping);
     }
 
+    @Override
+    @Transactional
+    public ShippingUpdateResponse updateShipping(ShippingUpdateRequest request){
+        var shipping = this.returnShippingIfExists(request.id());
 
+        if (shipping.getStatus() != Status.READY && shipping.getStatus() != Status.PREPARING){
+            throw new ValidationException("Shipping is sent!");
+        }
+        shipping.updateProperties(request);
+        shippingRepository.save(shipping);
 
+        return new ShippingUpdateResponse(shipping);
+    }
 
+    @Override
+    @Transactional
+    public void removeShipping(String id){
+        var shipping = this.returnShippingIfExists(id);
+        if (shipping.getStatus() == Status.READY || shipping.getStatus() == Status.PREPARING){
+            throw new ValidationException("Shipping is sent!");
+        }
+        shippingRepository.deleteById(id);
 
+    }
+
+    private Shipping returnShippingIfExists(String id) {
+        return shippingRepository.findById(id)
+                .orElseThrow(() -> new ValidationException("User not found"));
+    }
 
 }
+

@@ -13,7 +13,6 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
-
     private final MongoTemplate mongoTemplate;
 
     private String generateId(){
@@ -22,8 +21,13 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // Limpar coleções antes de inserir dados
+        mongoTemplate.dropCollection(User.class);
+
+        // Inserir novos dados
         List<User> users = createInitialUsers();
         mongoTemplate.insertAll(users);
+
         System.out.println("Usuários iniciais criados com sucesso.");
     }
 

@@ -1,6 +1,7 @@
 package com.azship.api.domain.shipping;
 
 import com.azship.api.domain.shipping.resource.request.ShippingRequest;
+import com.azship.api.domain.shipping.resource.request.ShippingUpdateRequest;
 import com.azship.api.domain.shipping.resource.request.UpdateShippingRequest;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -37,6 +38,22 @@ public class Shipping {
         this.postalCode = data.postalCode();
         this.volume = data.volume();
         this.weight = data.weight();
+    }
+
+    public void updateProperties(ShippingUpdateRequest data){
+        if (data.postalCode() != null){
+            this.postalCode = data.postalCode();
+        }
+        if (data.volume() != null){
+            this.volume = data.volume();
+        }
+        if (data.weight() != null){
+            this.weight = data.weight();
+        }
+        if (data.packAmount() != null){
+            this.packAmount = data.packAmount();
+        }
+
     }
 
     public void generateCode() {
