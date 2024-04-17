@@ -33,8 +33,8 @@ public class ShippingServiceImp implements ShippingService {
                 throw new RuntimeException(e);
             }
         });
-//        var user = userRepository.findById(request.userID())
-//                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        var user = userRepository.findById(request.userID())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
        Shipping shipping = Shipping.builder()
                 .type(request.type())
@@ -44,19 +44,20 @@ public class ShippingServiceImp implements ShippingService {
                 .build();
 
         shipping.setCode(generateCode());
-        //shipping.setUserId(user.getId());
+        shipping.setUserId(user.getId());
         var savedShipping = shippingRepository.save(shipping);
-        //user.getShippings().add(savedShipping);
-        //userRepository.save(user);
+        user.getShippings().add(savedShipping);
+        userRepository.save(user);
 
         return new ShippingResponse(savedShipping);
     }
 
     @Override
     public List<ShippingResponse> getAllByUserId(String userId) {
-        // Implementar a lógica para buscar todos os shippings associados a um usuário
-        // Você pode usar userRepository para encontrar o usuário pelo userId e obter a lista de shippings
-        return null;
+        var shippings = shippingRepository.findAllByUserId(userId);
+        return shippings.stream()
+                .map(ShippingResponse::new)
+                .toList();
     }
 
     private String generateCode() {
