@@ -4,6 +4,9 @@ import com.azship.api.domain.shipping.resource.request.ShippingRequest;
 import com.azship.api.domain.shipping.resource.response.ShippingResponse;
 import com.azship.api.service.imp.ShippingServiceImp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +24,9 @@ public class ShippingController {
             return ResponseEntity.ok(serviceImp.create(request));
     }
     @GetMapping("/{userId}")
-    public ResponseEntity<List<ShippingResponse>> getAll(@PathVariable String userId){
-        return ResponseEntity.ok(serviceImp.getAllByUserId(userId));
+    public ResponseEntity<Page<ShippingResponse>> getAll(@PathVariable String userId
+            , @PageableDefault(size = 10, sort = {"id"}) Pageable pagination) {
+        return ResponseEntity.ok(serviceImp.getAllByUserId(userId, pagination));
     }
-
 
 }

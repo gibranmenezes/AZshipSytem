@@ -9,6 +9,8 @@ import com.azship.api.infra.repository.UserRepository;
 import com.azship.api.service.ShippingService;
 import jakarta.xml.bind.ValidationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,11 +55,10 @@ public class ShippingServiceImp implements ShippingService {
     }
 
     @Override
-    public List<ShippingResponse> getAllByUserId(String userId) {
-        var shippings = shippingRepository.findAllByUserId(userId);
-        return shippings.stream()
-                .map(ShippingResponse::new)
-                .toList();
+    public Page<ShippingResponse> getAllByUserId(String userId, Pageable pagination) {
+        var page = shippingRepository.findAllByUserId(userId,pagination);
+        return page.map(ShippingResponse::new);
+
     }
 
     private String generateCode() {
