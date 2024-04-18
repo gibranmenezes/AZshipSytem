@@ -1,8 +1,13 @@
+server:
+  port: 80
+cors:
+  originPatterns: http://localhost:8080,http://localhost/swagger-ui/index.html#/*
 spring:
   data:
     mongodb:
       host: localhost
       port: 27017
-      database: azship
+      database: azship-db
+      authentication-database: admin
       username: root
       password: example
